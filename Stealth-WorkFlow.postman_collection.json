@@ -1,0 +1,252 @@
+{
+	"info": {
+		"_postman_id": "28b035de-0ccb-4ad3-a044-43dd8650497a",
+		"name": "Stealth-WorkFlow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST- To Create a New Role",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ab0239e-3f07-4e0f-9a79-b1a8f3d25aea",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable (\"Roles\", jsonData.CreateIdentityResponse);",
+							"",
+							"",
+							"pm.environment.get(\"Roles\");",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "79e62462-fab4-41d4-b868-2bfe8c7bf864",
+						"exec": [
+							"var current_timestamp = new Date();\r",
+							"postman.setEnvironmentVariable(\"current_timestamp\", current_timestamp.toISOString());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"meta\": {\n        \"retentionCode\": \"TempRetentionCode\",\n        \"location\": \"TempLocation\",\n        \"deviceID\": \"TempDeviceId\"\n    },\n    \"data\": {\n        \"sgName\": \"Test-Role-1\",\n        \"permissions\": [\n            {\n                \"moduleId\": \"viewenrollment1\",\n                \"moduleName\": \"Create Enrollment\",\n                \"operations\": [\n                    {\n                        \"id\": \"enrollment.update1\",\n                        \"name\": \"Update Enrollment\",\n                        \"domains\": [\n                            \"Expideted\",\n                            \"Visa\"\n                        ],\n                        \"hierarchy\": [\n                            \"update\"\n                        ]\n                    },\n                    {\n                        \"id\": \"enrollment.create\",\n                        \"name\": \"Create Enrollment\",\n                        \"domains\": [\n                            \"Expidited\",\n                            \"Visa\"\n                        ],\n                        \"hierarchy\": [\n                            \"create\"\n                        ]\n                    }\n                ]\n            }\n        ],\n        \"description\": \"Disabled Security Group\",\n        \"enabled\": \"false\",\n        \"createdUser\": \"Prakash\",\n        \"createdDate\": \"{{current_timestamp}}\"\n    }\n}"
+				},
+				"url": {
+					"raw": "{{URL}}/sghandler/{{Role}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"sghandler",
+						"{{Role}}"
+					]
+				},
+				"description": "This will check Whether the Role is existing or Not. This is Prmary check"
+			},
+			"response": []
+		},
+		{
+			"name": "Get All",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ab0239e-3f07-4e0f-9a79-b1a8f3d25aea",
+						"exec": [
+							"pm.test(\"response is ok\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"//Response Body Validation\r",
+							"var data = JSON.parse(responseBody);\r",
+							"tests [\"Success True\"] = data.meta.success === true;\r",
+							"tests [\"Message is OK\"] = data.meta.message == \"OK\";\r",
+							"\r",
+							"\r",
+							"\r",
+							"pm.test(\"Response has Role= TestRoleZ100\", function () {\r",
+							"    pm.expect(pm.response.text()).to.include(\"TestRoleZ100\");\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/sghandler",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"sghandler"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Role",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ab0239e-3f07-4e0f-9a79-b1a8f3d25aea",
+						"exec": [
+							"pm.test(\"response is ok\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/sghandler/{{Role}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"sghandler",
+						"{{Role}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Role",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ab0239e-3f07-4e0f-9a79-b1a8f3d25aea",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{URL}}/sghandler/{{Role}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"sghandler",
+						"{{Role}}"
+					]
+				},
+				"description": "This will check Whether the Role is existing or Not. This is Prmary check"
+			},
+			"response": []
+		},
+		{
+			"name": "Get Role",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ab0239e-3f07-4e0f-9a79-b1a8f3d25aea",
+						"exec": [
+							"pm.test(\"response is ok\", () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/sghandler/{{Role}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"sghandler",
+						"{{Role}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
