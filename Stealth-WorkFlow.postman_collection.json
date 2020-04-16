@@ -1,0 +1,316 @@
+{
+	"info": {
+		"_postman_id": "28b035de-0ccb-4ad3-a044-43dd8650497a",
+		"name": "Stealth-WorkFlow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "SI-22574- To Create a New Role",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ab0239e-3f07-4e0f-9a79-b1a8f3d25aea",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"var jsonData = JSON.parse(responseBody);",
+							"postman.setEnvironmentVariable (\"Roles\", jsonData.CreateIdentityResponse);",
+							"",
+							"",
+							"pm.environment.get(\"Roles\");",
+							"",
+							"pm.test(\"Success\", function () {",
+							"    pm.expect(pm.response.text()).to.include(true);",
+							"     pm.expect(pm.response.text()).to.include(\"OK\");",
+							"     pm.expect(pm.response.text()).to.include(\"200\");",
+							"});",
+							"",
+							"//Response Body Validation",
+							"var data = JSON.parse(responseBody);",
+							"tests [\"Success True\"] = data.meta.success === true;",
+							"tests [\"Message is OK\"] = data.meta.message == \"OK\";",
+							"tests [\"Code is 200\"] = data.meta.code === \"200\";",
+							"",
+							"",
+							"//Schema Validation",
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"            \"success\": { \"type\": \"boolean\"},",
+							"            \"message\": { \"type\": \"string\"},",
+							"            \"code\": { \"type\": \"string\"},",
+							"            ",
+							"                }",
+							"            };",
+							" ",
+							"",
+							"var user = JSON.parse(responseBody);",
+							"tests [\"Schema Validatio passed\"] = tv4.validate(user, schema);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "79e62462-fab4-41d4-b868-2bfe8c7bf864",
+						"exec": [
+							"var current_timestamp = new Date();\r",
+							"postman.setEnvironmentVariable(\"current_timestamp\", current_timestamp.toISOString());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					},
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"meta\": {\n        \"retentionCode\": \"TempRetentionCode\",\n        \"location\": \"TempLocation\",\n        \"deviceID\": \"TempDeviceId\"\n    },\n    \"data\": {\n        \"sgName\": \"Test-Role-1\",\n        \"permissions\": [\n            {\n                \"moduleId\": \"viewenrollment1\",\n                \"moduleName\": \"Create Enrollment\",\n                \"operations\": [\n                    {\n                        \"id\": \"enrollment.update1\",\n                        \"name\": \"Update Enrollment\",\n                        \"domains\": [\n                            \"Expideted\",\n                            \"Visa\"\n                        ],\n                        \"hierarchy\": [\n                            \"update\"\n                        ]\n                    },\n                    {\n                        \"id\": \"enrollment.create\",\n                        \"name\": \"Create Enrollment\",\n                        \"domains\": [\n                            \"Expidited\",\n                            \"Visa\"\n                        ],\n                        \"hierarchy\": [\n                            \"create\"\n                        ]\n                    }\n                ]\n            }\n        ],\n        \"description\": \"Disabled Security Group\",\n        \"enabled\": \"false\",\n        \"createdUser\": \"Prakash\",\n        \"createdDate\": \"{{current_timestamp}}\"\n    }\n}"
+				},
+				"url": {
+					"raw": "{{URL}}/sghandler/{{Role}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"sghandler",
+						"{{Role}}"
+					]
+				},
+				"description": "This will check Whether the Role is existing or Not. This is Prmary check"
+			},
+			"response": []
+		},
+		{
+			"name": "SI-23304-Get Role",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ab0239e-3f07-4e0f-9a79-b1a8f3d25aea",
+						"exec": [
+							"pm.test(\"response is ok\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"//Response Body Validation\r",
+							"var data = JSON.parse(responseBody);\r",
+							"tests [\"Success True\"] = data.meta.success === true;\r",
+							"tests [\"Message is OK\"] = data.meta.message == \"OK\";\r",
+							"tests [\"Code is 200\"] = data.meta.code === \"200\";\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/sghandler/{{Role}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"sghandler",
+						"{{Role}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SI-23306-Get All",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ab0239e-3f07-4e0f-9a79-b1a8f3d25aea",
+						"exec": [
+							"pm.test(\"response is ok\", () => {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"//Response Body Validation\r",
+							"var data = JSON.parse(responseBody);\r",
+							"tests [\"Success True\"] = data.meta.success === true;\r",
+							"tests [\"Message is OK\"] = data.meta.message === \"OK\";\r",
+							"tests [\"Code is 200\"] = data.meta.code === \"200\";\r",
+							"\r",
+							"//Response Body DATA Validation\r",
+							"var data = JSON.parse(responseBody);\r",
+							"\r",
+							"tests [\"Role is displayed\"] = data.data[0]._id === \"sg-enrollmentall\";\r",
+							"tests [\"SGID is sg-enrollmentall\"] = data.data[0].sgId === \"sg-enrollmentall\";\r",
+							"tests [\"SgName is Test Role 1\"] = data.data[0].sgName === \"sg-enrollmentall\";\r",
+							"tests [\"ModuleId is viewenrollment1\"] = data.data[0].permissions[0].moduleId === \"enrollment\";\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/sghandler",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"sghandler"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "SI-23307-Delete Role",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ab0239e-3f07-4e0f-9a79-b1a8f3d25aea",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"//Response Body Validation",
+							"var data = JSON.parse(responseBody);",
+							"tests [\"Success True\"] = data.meta.success === true;",
+							"tests [\"Message is OK\"] = data.meta.message == \"OK\";",
+							"tests [\"Code is 200\"] = data.meta.code === \"200\";",
+							"",
+							"",
+							"//Schema Validation",
+							"var schema = {",
+							"  \"type\": \"object\",",
+							"  \"properties\": {",
+							"            \"success\": { \"type\": \"boolean\"},",
+							"            \"message\": { \"type\": \"string\"},",
+							"            \"code\": { \"type\": \"string\"},",
+							"            ",
+							"                }",
+							"            };",
+							" ",
+							"",
+							"var user = JSON.parse(responseBody);",
+							"tests [\"Success\"] = tv4.validate(user, schema);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{URL}}/sghandler/{{Role}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"sghandler",
+						"{{Role}}"
+					]
+				},
+				"description": "This will check Whether the Role is existing or Not. This is Prmary check"
+			},
+			"response": []
+		},
+		{
+			"name": "SI-22575-Get Role",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "2ab0239e-3f07-4e0f-9a79-b1a8f3d25aea",
+						"exec": [
+							"pm.test(\"response is ok\", () => {\r",
+							"    pm.response.to.have.status(404);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"//Response Body Validation\r",
+							"var data = JSON.parse(responseBody);\r",
+							"tests [\"Success True\"] = data.meta.success === false;\r",
+							"tests [\"Message is OK\"] = data.meta.message == \"Not Found\";\r",
+							"tests [\"Code is 404\"] = data.meta.code === \"404\";"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"url": {
+					"raw": "{{URL}}/sghandler/{{Role}}",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"sghandler",
+						"{{Role}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
