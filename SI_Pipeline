@@ -1,0 +1,3 @@
+bat label: 'SI', script: 'SI1'
+cd c:\Stealth\API\Workflow
+newman run Stealth-WorkFlow.postman_collection.json -e Stealth.postman_environment.json --disable-unicode'''
